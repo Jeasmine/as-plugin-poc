@@ -1,0 +1,36 @@
+<idea-plugin>
+    <id>org.example.as-plugin-poc</id>
+    <name>Plugin POC!</name>
+    <vendor>Jeasmine</vendor>
+
+    <description>Example plugin for POC</description>
+
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.android</depends>
+
+    <!--    <extensions defaultExtensionNs="com.intellij">-->
+    <!--        &lt;!&ndash; Add your extensions here &ndash;&gt;-->
+    <!--    </extensions>-->
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="TriggerPluginAction"
+                class="PluginActionExample"
+                text="Trigger plugin action example"
+                description="Trigger plugin action example">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <keyboard-shortcut first-keystroke="ctrl meta alt B" keymap="$default"/>
+        </action>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Sample Calendar"
+                    secondary="true"
+                    icon="AllIcons.General.Modified"
+                    anchor="right"
+                    factoryClass="MyToolWindowFactory"/>
+    </extensions>
+
+</idea-plugin>
