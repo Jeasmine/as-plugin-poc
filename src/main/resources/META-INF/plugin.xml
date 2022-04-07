@@ -14,23 +14,13 @@
     <!--        &lt;!&ndash; Add your extensions here &ndash;&gt;-->
     <!--    </extensions>-->
 
-    <actions>
-        <!-- Add your actions here -->
-        <action id="TriggerPluginAction"
-                class="PluginActionExample"
-                text="Trigger plugin action example"
-                description="Trigger plugin action example">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-            <keyboard-shortcut first-keystroke="ctrl meta alt B" keymap="$default"/>
-        </action>
-    </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Sample Calendar"
+        <toolWindow id="OneSignal Plugin"
                     secondary="true"
                     icon="AllIcons.General.Modified"
                     anchor="right"
-                    factoryClass="MyToolWindowFactory"/>
+                    factoryClass="OneSignalToolWindowFactory"/>
     </extensions>
 
 </idea-plugin>

@@ -18,7 +18,7 @@ public class MyToolWindow {
     hideToolWindowButton.addActionListener(e -> toolWindow.hide(null));
     refreshToolWindowButton.addActionListener(e -> currentDateTime());
 
-    this.currentDateTime();
+    currentDateTime();
   }
 
   public void currentDateTime() {
