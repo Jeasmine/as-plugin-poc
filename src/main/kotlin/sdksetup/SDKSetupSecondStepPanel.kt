@@ -2,35 +2,24 @@ package sdksetup
 
 import OneSignalStep
 import OneSignalStepListener
-import com.intellij.openapi.project.Project
 import view.MultilineLabel
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class SDKSetupFirstStepPanel(
+class SDKSetupSecondStepPanel(
     private val basePath: String,
-    private val project: Project,
     private val stepListener: OneSignalStepListener
 ) : JPanel(),
     OneSignalStep {
 
     private val controller = SDKSetupFirstStepController()
     private val instructionString = """
-        OneSignal SDK needs the following changes in your build.gradle file
+        OneSignal SDK needs the following changes in your application build.gradle
 
-        buildscript {
-
-            repositories {
-                ...
-                gradlePluginPortal()
-            }
-
-            dependencies {
-
-               classpath 'com.onesignal:onesignal-gradle-plugin:[0.8.1, 0.99.99]'
-            }
+       dependencies {
+            implementation('com.onesignal:OneSignal:4.6.3')
        }
        
        Be sure that before next button is clicked your Gradle is sync
@@ -71,7 +60,7 @@ class SDKSetupFirstStepPanel(
 
     private fun initListeners() {
         nextButton.addActionListener {
-            controller.addSDKToBuildGradle(basePath, project)
+//            controller.addSDKToBuildGradle(basePath)
             stepListener.onNextStep()
         }
     }

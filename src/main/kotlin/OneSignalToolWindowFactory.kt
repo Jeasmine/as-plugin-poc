@@ -5,9 +5,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
+import org.jetbrains.eval4j.boolean
 import org.jetbrains.kotlin.serialization.builtins.main
 import sdksetup.SDKSetupFirstStepPanel
 import java.awt.CardLayout
+import javax.swing.JComponent
+import javax.swing.JFrame
 import javax.swing.JPanel
 
 class OneSignalToolWindowFactory : ToolWindowFactory, OneSignalStepListener {
@@ -15,6 +18,11 @@ class OneSignalToolWindowFactory : ToolWindowFactory, OneSignalStepListener {
     private var project: Project? = null
     private var toolWindow: ToolWindow? = null
     private var mainPanel: JPanel? = null
+    private var mainCardLayout = CardLayout()
+
+    private var sdkSetupSteps = linkedMapOf<String, OneSignalStep>()
+    private var sdkSetupStepIndex = 0
+    private var welcomeKey = "welcome_panel"
 
     /**
      * Create the tool window content.
@@ -26,23 +34,44 @@ class OneSignalToolWindowFactory : ToolWindowFactory, OneSignalStepListener {
         this.project = project
         this.toolWindow = toolWindow
 
-//        mainPanel = JPanel(CardLayout()).apply {
-//            add(WelcomeScreenPanel(this@OneSignalToolWindowFactory))
-//            add(SDKSetupFirstStepPanel(this@OneSignalToolWindowFactory))
-//        }
+        // If basePath is null add step to get basePath
+        val firstStepPanel = SDKSetupFirstStepPanel(project.basePath!!, project, this@OneSignalToolWindowFactory)
+        sdkSetupSteps["first_step_panel"] = firstStepPanel
+
+        val welcomePanel = WelcomeScreenPanel(this@OneSignalToolWindowFactory)
+
+        this.mainPanel = JPanel(mainCardLayout).apply {
+            add(welcomePanel, welcomeKey)
+
+            sdkSetupSteps.entries.forEach {
+                add(it.value as JComponent, it.key)
+            }
+        }
+
         val contentFactory = ContentFactory.SERVICE.getInstance()
-        val content = contentFactory.createContent(SDKSetupFirstStepPanel(project, this@OneSignalToolWindowFactory), "", false)
+        val content = contentFactory.createContent(mainPanel, "", false)
         toolWindow.contentManager.addContent(content)
-    }
-
-    private fun addContent(panel: JPanel) {
-
     }
 
     override fun onNextStep() {
         project?.let {
             showNotification(it, "Navigating to next panel")
         }
+
+        var index = 0
+        val keysIterator = sdkSetupSteps.keys.iterator()
+        while (keysIterator.hasNext()) {
+            if (index == sdkSetupStepIndex) {
+                sdkSetupStepIndex++
+                showPanel(keysIterator.next())
+                break
+            }
+            index++
+        }
+    }
+
+    private fun showPanel(panelName: String) {
+        mainCardLayout.show(mainPanel, panelName);
     }
 
     private fun showNotification(project: Project, message: String) {
@@ -54,47 +83,4 @@ class OneSignalToolWindowFactory : ToolWindowFactory, OneSignalStepListener {
                 null
             ).notify(project)
     }
-//        project.let {
-//            it.showNotification("Path: ${it.basePath}")
-//
-//            val basePath = it.basePath
-//
-//            val projectBuildGradle = File("$basePath/build.gradle")
-//
-//            var content: String = projectBuildGradle.readText()
-//
-//
-//            val pluginRegex = "gradlePluginPortal()".toRegex()
-//
-//            it.showNotification("Path: ${pluginRegex.find(content)}")
-//
-//            content = content.replace("mavenCentral()", "mavenCentral()\n\t\tgradlePluginPortal()")
-//        }
-
-//        val devices = event.project?.let {
-//            AndroidSdkUtils.getDebugBridge(it)?.devices
-//        }
-
-//            projectBuildGradle.writeText(content)
-
-
-//            it.showNotification("content: $content")
-
-//        val filename = ""
-//        var fileObject = File(filename)
-//        var fileExists = fileObject.exists()
-//        if(fileExists){
-//            print("$filename file does exist.")
-//        } else {
-//            print("$filename file does not exist.")
-//        }
-
-//        var result = ""
-//        devices?.forEach {
-//            result += "$it "
-//        }
-//        if (result.isEmpty())
-//            event.project?.showNotification("No devices founded")
-//        else
-//            event.project?.showNotification("$result")
 }
