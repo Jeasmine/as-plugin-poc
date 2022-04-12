@@ -14,7 +14,9 @@ fun String.appendStringByMatch(match: String, append: String, indentation: Strin
         showNotification(project, "Match string: $match match: $regexMatch")
         if (regexMatch != null) {
             showNotification(project, "Making replacement \"$match$indentation$append\"")
-            "${this.substring(0, regexMatch.last + 1)}$indentation$append${this.substring(regexMatch.last + 1, this.length)}"
+            val result = "${this.substring(0, regexMatch.last + 1)}$indentation$append${this.substring(regexMatch.last + 1, this.length)}"
+            showNotification(project, result)
+            result
         } else {
             this
         }

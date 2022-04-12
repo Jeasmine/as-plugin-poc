@@ -8,6 +8,8 @@ import com.intellij.ui.content.ContentFactory
 import org.jetbrains.eval4j.boolean
 import org.jetbrains.kotlin.serialization.builtins.main
 import sdksetup.SDKSetupFirstStepPanel
+import sdksetup.SDKSetupSecondStepController
+import sdksetup.SDKSetupSecondStepPanel
 import java.awt.CardLayout
 import javax.swing.JComponent
 import javax.swing.JFrame
@@ -35,8 +37,8 @@ class OneSignalToolWindowFactory : ToolWindowFactory, OneSignalStepListener {
         this.toolWindow = toolWindow
 
         // If basePath is null add step to get basePath
-        val firstStepPanel = SDKSetupFirstStepPanel(project.basePath!!, project, this@OneSignalToolWindowFactory)
-        sdkSetupSteps["first_step_panel"] = firstStepPanel
+        sdkSetupSteps["first_step_panel"] = SDKSetupFirstStepPanel(project.basePath!!, project, this@OneSignalToolWindowFactory)
+        sdkSetupSteps["second_step_panel"] = SDKSetupSecondStepPanel(project.basePath!!, project, this@OneSignalToolWindowFactory)
 
         val welcomePanel = WelcomeScreenPanel(this@OneSignalToolWindowFactory)
 
@@ -61,9 +63,10 @@ class OneSignalToolWindowFactory : ToolWindowFactory, OneSignalStepListener {
         var index = 0
         val keysIterator = sdkSetupSteps.keys.iterator()
         while (keysIterator.hasNext()) {
+            val key = keysIterator.next()
             if (index == sdkSetupStepIndex) {
                 sdkSetupStepIndex++
-                showPanel(keysIterator.next())
+                showPanel(key)
                 break
             }
             index++
