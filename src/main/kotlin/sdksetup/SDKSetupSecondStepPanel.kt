@@ -3,7 +3,7 @@ package sdksetup
 import OneSignalStep
 import OneSignalStepListener
 import com.intellij.openapi.project.Project
-import showNotification
+import utils.showNotification
 import view.MultilineLabel
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
